@@ -20,7 +20,7 @@ std::map<std::string, std::string> TC_OPT_DEFAULTS = {{"run"               , "mi
 std::map<std::string, std::string> TC_SPE_DEFAULTS = {{"run"               , "energy"},};
 std::map<std::string, std::string> TC_FREQ_DEFAULTS ={{"run"               , "frequencies"},
                                                       {"mincheck"          , "false"}};
-std::map<std::string, std::string> TC_BOMD_DEFAULTS ={{"run"               , "bomd"},
+std::map<std::string, std::string> TC_BOMD_DEFAULTS ={{"run"               , "md"},
                                                       {"nstep"             , "1000"},
                                                       {"min_maxallowedstep", "5.0"},
                                                       {"timestep"          , "1.0"},
@@ -53,6 +53,7 @@ std::string CALC_TYPE = "NONE";
 std::string TC_FILENAME = "tc.in";
 std::string TC_OUTFILE = "tc.in";
 std::string TC_ERRFILE = "tc.in";
+
 void get_calc_type(std::map<std::string,std::vector<std::string>> &flags)
 {   
     // After parsing the flags, there should only be one calculation type selected.
@@ -174,6 +175,16 @@ void generate_full_keyword_set(std::map<std::string,std::vector<std::string>> &f
         keywords[key] = val;
     }
 
+    // Assign CASSCF settings.
+    if (USE_CASSCF)
+    {
+        for (std::map<std::string,std::string>::iterator iter = TC_CASSCF_DEFAULTS.begin(); iter != TC_CASSCF_DEFAULTS.end(); iter++)
+        {
+            std::string key = iter->first;
+            std::string val = iter->second;
+            keywords[key] = val;
+        }
+    }
     // Assign user-defined TeraChem settings.
     for (std::map<std::string,std::vector<std::string>>::iterator iter = flags.begin(); iter != flags.end(); iter++)
     {

@@ -11,9 +11,7 @@ int main (int argc, char** argv)
 
     // Command Line Parse, includes checking for debug mode.
     parse_command_line_arguments(flags, argc, argv);
-
     debug_log("Parsed command line arguments to 'flags' variable.");
-
 
     // Write TeraChem input for given flags
     Write_TC_Input(flags, keywords);
@@ -25,6 +23,7 @@ int main (int argc, char** argv)
         normal_log("DRYRUN flag was invoked.  Input files have been generated, but TeraChem will not be run at this time.");
         return 0;
     }
+
     // Check if on warrior, then either submit a TC Job script or run directly.
     std::string hostname = GetSysResponse("hostname");
     if (hostname.find("warrior") != std::string::npos)
@@ -32,9 +31,7 @@ int main (int argc, char** argv)
         debug_log("Submitting batch job to SLURM queue.");
         // Submit SLURM job.
         SubmitSlurmJob(keywords);
-        
     }
-
     else
     {
         debug_log("Running terachem directly.");
@@ -42,5 +39,6 @@ int main (int argc, char** argv)
         RunTeraChem();
     }
     
+    // And we're done.
     return 0;
 }
