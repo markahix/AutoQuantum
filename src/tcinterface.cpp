@@ -26,6 +26,15 @@ std::map<std::string, std::string> TC_BOMD_DEFAULTS ={{"run"               , "md
                                                       {"timestep"          , "1.0"},
                                                       {"mdbc"              , "spherical"},
                                                       {"orbitalswrtfrq"    , "100"},};
+std::map<std::string, std::string> TC_TS_DEFAULTS  = {{"run"               , "ts"},
+                                                      {"nstep"             , "1000"},
+                                                      {"min_maxallowedstep", "5.0"},
+                                                      {"timestep"          , "1.0"},
+                                                      {"min_image"         , "8"},
+                                                      {"orbitalswrtfrq"    , "100"},
+                                                      {"min_coordinates"   , "cartesian"},
+                                                      {"ts_method"         , "neb_frozen"}};
+
 std::map<std::string, std::string> TC_CASSCF_DEFAULTS={ {"casscf"              , "no"},
                                                         {"alphacas"            , "yes"},
                                                         {"alpha"               , "0.64"},
@@ -103,6 +112,17 @@ void get_calc_type(std::map<std::string,std::vector<std::string>> &flags)
         flags.erase(flags.find("bomd"));
     }
 
+    // TS - NEB
+    if (flags.count("ts") > 0)
+    {
+        CALC_TYPE = "TS";
+        TC_FILENAME = "tc_ts.in";
+        TC_OUTFILE = "tc_ts.out";
+        TC_ERRFILE = "tc_ts.err";
+        n_calc_types_found++;
+        flags.erase(flags.find("ts"));
+    }
+
     // Error Checking for calculation types.
     if (n_calc_types_found > 1)
     {   
@@ -157,6 +177,10 @@ void generate_full_keyword_set(std::map<std::string,std::vector<std::string>> &f
     if (CALC_TYPE == "BOMD")
     {
         defaults = TC_BOMD_DEFAULTS;
+    }    
+    if (CALC_TYPE == "TS")
+    {
+        defaults = TC_TS_DEFAULTS;
     }    
     
     // Assign base TeraChem default settings.
